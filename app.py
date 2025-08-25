@@ -14,6 +14,10 @@ ACCESS_URL = "https://your-course-link.com"
 @app.route('/pay', methods=['POST'])
 def pay():
     email = request.form.get("email")
+    # Отвечаем на тест-запрос от Tilda
+    if request.form.get("test") == "test":
+        return "Tilda test OK", 200
+
     if not email:
         return "Email обязателен", 400
 
