@@ -1,9 +1,12 @@
 
-from yookassa import Payment
+
 import uuid
 from config import YOOKASSA_SHOP_ID, YOOKASSA_SECRET_KEY
+from yookassa import Payment, Configuration
+from config import YOOKASSA_SHOP_ID, YOOKASSA_SECRET_KEY
 
-Payment.configure(shop_id=YOOKASSA_SHOP_ID, secret_key=YOOKASSA_SECRET_KEY)
+Configuration.account_id = YOOKASSA_SHOP_ID
+Configuration.secret_key = YOOKASSA_SECRET_KEY
 
 def create_payment(email):
     payment = Payment.create({
