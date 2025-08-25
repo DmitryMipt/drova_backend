@@ -4,6 +4,7 @@ from yookassa_utils import create_payment
 from mailer import send_email
 from db import init_db, save_payment
 import datetime
+import os
 
 app = Flask(__name__)
 init_db()
