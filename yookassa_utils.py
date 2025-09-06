@@ -8,7 +8,7 @@ from config import YOOKASSA_SHOP_ID, YOOKASSA_SECRET_KEY
 Configuration.account_id = YOOKASSA_SHOP_ID
 Configuration.secret_key = YOOKASSA_SECRET_KEY
 
-PRICE = "786.50"  # строкой, 2 знака после запятой
+PRICE = "1.50"  # строкой, 2 знака после запятой
 
 def create_payment(email: str):
     payment = Payment.create({
