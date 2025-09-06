@@ -9,25 +9,32 @@ import os
 app = Flask(__name__)
 init_db()
 
-ACCESS_URL = "https://your-course-link.com"
+ACCESS_URL = "https://project13852829.tilda.ws"
 
-@app.route('/pay', methods=['POST'])
+@app.after_request
+def add_cors(resp):
+    resp.headers['Access-Control-Allow-Origin'] = '*'  # можешь указать точный домен Tilda: 'https://project13852829.tilda.ws'
+    resp.headers['Vary'] = 'Origin'
+    resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    resp.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+    return resp
+
+# --- /pay: разрешаем preflight ---
+@app.route('/pay', methods=['POST', 'OPTIONS'])
 def pay():
-    try:
-        if request.form.get("test") == "test":
-            return "Tilda test OK", 200
+    if request.method == 'OPTIONS':
+        # preflight ок, тело не требуется
+        return ('', 204)
 
-        email = request.form.get("email")
-        if not email:
-            return jsonify({"error": "Email обязателен"}), 400
+    # дальше твоя логика:
+    # if request.form.get("test") == "test": return "Tilda test OK", 200
+    email = request.form.get("email")
+    if not email:
+        return jsonify({"error": "Email обязателен"}), 400
 
-        payment_url, payment_id = create_payment(email)  # твоя функция
-        save_payment(email=email, payment_id=payment_id, status="created")  # если есть
-
-        return jsonify({"redirect_url": payment_url}), 200
-    except Exception as e:
-        import traceback; traceback.print_exc()
-        return jsonify({"error": f"server_error: {e}"}), 500
+    payment_url, payment_id = create_payment(email)
+    save_payment(email=email, payment_id=payment_id, status="created")
+    return jsonify({"redirect_url": payment_url}), 200
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
