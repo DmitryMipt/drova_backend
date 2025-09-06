@@ -1,5 +1,5 @@
 
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, jsonify
 from yookassa_utils import create_payment
 from mailer import send_email
 from db import init_db, save_payment
@@ -13,17 +13,21 @@ ACCESS_URL = "https://your-course-link.com"
 
 @app.route('/pay', methods=['POST'])
 def pay():
-    email = request.form.get("email")
-    # Отвечаем на тест-запрос от Tilda
-    if request.form.get("test") == "test":
-        return "Tilda test OK", 200
+    try:
+        if request.form.get("test") == "test":
+            return "Tilda test OK", 200
 
-    if not email:
-        return "Email обязателен", 400
+        email = request.form.get("email")
+        if not email:
+            return jsonify({"error": "Email обязателен"}), 400
 
-    payment_url, payment_id = create_payment(email)
-    save_payment(email=email, payment_id=payment_id, status="created", timestamp=datetime.datetime.utcnow())
-    return jsonify({"redirect_url": payment_url})
+        payment_url, payment_id = create_payment(email)  # твоя функция
+        save_payment(email=email, payment_id=payment_id, status="created")  # если есть
+
+        return jsonify({"redirect_url": payment_url}), 200
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": f"server_error: {e}"}), 500
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
