@@ -23,7 +23,7 @@ def pay():
 
     payment_url, payment_id = create_payment(email)
     save_payment(email=email, payment_id=payment_id, status="created", timestamp=datetime.datetime.utcnow())
-    return redirect(payment_url)
+    return jsonify({"redirect_url": payment_url})
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
