@@ -6,6 +6,7 @@ from db import init_db, save_payment
 from yookassa import Payment
 import datetime
 import os
+import logging
 
 app = Flask(__name__)
 init_db()
