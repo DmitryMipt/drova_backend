@@ -27,6 +27,9 @@ def create_payment(email: str, amount: str):
                 "payment_subject": "service",
                 "payment_mode": "full_payment"
             }]
+        },
+        "metadata": {   # вот здесь
+            "email": email
         }
     })
     return payment.confirmation.confirmation_url, payment.id
