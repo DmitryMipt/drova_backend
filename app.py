@@ -65,6 +65,7 @@ def yk_webhook():
             amount = (obj.get('amount') or {}).get('value')
 
             # твои функции
+            logging.info(f"Вебхук: email={email}")
             send_email(email, ACCESS_URL)
             save_payment(email=email, amount=amount, status='paid',
                          timestamp=datetime.datetime.utcnow())
