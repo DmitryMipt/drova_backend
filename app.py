@@ -13,6 +13,13 @@ init_db()
 
 ACCESS_URL = "https://project13852829.tilda.ws"
 
+@app.route("/admin/download-db")
+def download_db():
+    try:
+        return send_file("payments.db", as_attachment=True)
+    except Exception as e:
+        return str(e), 500
+
 @app.after_request
 def add_cors(resp):
     resp.headers['Access-Control-Allow-Origin'] = '*'  # можешь указать точный домен Tilda: 'https://project13852829.tilda.ws'
