@@ -29,10 +29,11 @@ def pay():
     # дальше твоя логика:
     # if request.form.get("test") == "test": return "Tilda test OK", 200
     email = request.form.get("email")
+    amount = request.form.get("amount")
     if not email:
         return jsonify({"error": "Email обязателен"}), 400
 
-    payment_url, payment_id = create_payment(email)
+    payment_url, payment_id = create_payment(email,amount)
     save_payment(email=email, payment_id=payment_id, status="created")
     return jsonify({"redirect_url": payment_url}), 200
 
