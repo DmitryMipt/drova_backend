@@ -13,7 +13,7 @@ def create_payment(email: str, amount: str):
         "amount": {"value": amount, "currency": "RUB"},
         "confirmation": {
             "type": "redirect",
-            "return_url": "https://project13852829.tilda.ws/thanks"
+            "return_url": "https://koli-drova.ru/thanks"
         },
         "capture": True,
         "description": f"Курс по колке дров ({email})",
