@@ -14,7 +14,7 @@ init_db()
 app = Flask(__name__)
 init_db()
 
-ACCESS_URL = "https://project13852829.tilda.ws"
+ACCESS_URL = "https://koli-drova.ru"
 
 @app.route("/admin/download-db")
 def download_db():
