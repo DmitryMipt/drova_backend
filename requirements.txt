@@ -1,4 +1,5 @@
 
 Flask
 yookassa
+gunicorn
 psycopg2-binary
