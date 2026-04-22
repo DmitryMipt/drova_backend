@@ -10,13 +10,14 @@ def send_email(to_email: str, link: str):
     from email.mime.text import MIMEText
 
     msg = MIMEText(f"""
-    Привет!
+    Привет!<br><br>
+
+    Твой доступ к курсу:<br><br>
     
-    Твой доступ к курсу:
-    
-    👉 <a href="{link}">Открыть курс</a>
-    
-    Удачи!
+    👉 <a href="{link}"><b>Открыть курс</b></a><br><br>
+
+    Смотри и учись.<br><br>
+    Обнял 🤝
     
     """, "html")
     msg["Subject"] = "Доступ к курсу по колке дров"
