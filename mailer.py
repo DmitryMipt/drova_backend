@@ -7,7 +7,18 @@ def send_email(to_email: str, link: str):
     if not to_email or '@' not in to_email:
         raise ValueError(f"Некорректный email получателя: {to_email!r}")
 
-    msg = MIMEText(f"Привет!\n\nВот твоя ссылка на курс: {link}\n\nУдачи!")
+    from email.mime.text import MIMEText
+
+    msg = MIMEText(f"""
+    Привет!
+    
+    Твой доступ к курсу:
+    
+    👉 <a href="{link}">Открыть курс</a>
+    
+    Удачи!
+    
+    """, "html")
     msg["Subject"] = "Доступ к курсу по колке дров"
     msg["From"] = GMAIL_USER
     msg["To"] = to_email
