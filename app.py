@@ -95,29 +95,25 @@ def stats():
     conn = _get_conn()
     cur = conn.cursor()
 
-    # всего
-    cur.execute("SELECT COUNT(*) FROM payments")
-    total = cur.fetchone()[0]
+    cur.execute("SELECT COUNT(*) as cnt FROM payments")
+    total = cur.fetchone()['cnt']
 
-    # оплачено
-    cur.execute("SELECT COUNT(*) FROM payments WHERE status='paid'")
-    paid = cur.fetchone()[0]
-
-    # не оплатили
-    cur.execute("SELECT COUNT(*) FROM payments WHERE status='created'")
-    not_paid = cur.fetchone()[0]
-
-    # сумма
+    cur.execute("SELECT COUNT(*) as cnt FROM payments WHERE status='paid'")
+    paid = cur.fetchone()['cnt']
+    
+    cur.execute("SELECT COUNT(*) as cnt FROM payments WHERE status='created'")
+    not_paid = cur.fetchone()['cnt']
+    
     cur.execute("""
         SELECT COALESCE(SUM(
             CASE 
                 WHEN amount ~ '^[0-9.]+$' THEN amount::numeric 
                 ELSE 0 
             END
-        ), 0)
+        ), 0) as total
         FROM payments WHERE status='paid'
     """)
-    total_sum_rub = cur.fetchone()[0]
+    total_sum_rub = cur.fetchone()['total']
 
     print(total, paid, not_paid, total_sum_rub)
     cur.close()
