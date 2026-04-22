@@ -14,7 +14,7 @@ init_db()
 app = Flask(__name__)
 init_db()
 
-ACCESS_URL = "https://koli-drova.ru"
+ACCESS_URL = "https://drive.google.com/drive/folders/14_WZemprvf6gO7WLK-Ae_TCnK39gbFQN?usp=sharing"
 
 @app.route("/admin/download-db")
 def download_db():
