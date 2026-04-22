@@ -88,8 +88,10 @@ def yk_webhook():
 
     return '', 200
     
-@app.route("/statiti")
-def stats():
+@app.route("/statiti", methods=["GET"])
+def stats():    
+    if request.args.get("key") != "123":
+        return "no", 403
     conn = get_conn()
     cur = conn.cursor()
 
@@ -112,16 +114,17 @@ def stats():
     """)
     total_sum_rub = cur.fetchone()[0]
 
+    print(total, paid, not_paid, total_sum_rub)
     cur.close()
     conn.close()
 
-    return {
+    return jsonify({
         "opened_payment": total,
         "paid": paid,
         "not_paid": not_paid,
         "conversion": round(paid / total * 100, 2) if total else 0,
         "total_sum_rub": float(total_sum_rub)
-    }
+    })
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
