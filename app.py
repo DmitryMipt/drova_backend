@@ -120,7 +120,7 @@ def stats():
     conn.close()
 
     return jsonify({
-        "opened_payment": total,
+        "total_payment_clicks": total,
         "paid": paid,
         "not_paid": not_paid,
         "conversion": round(paid / total * 100, 2) if total else 0,
