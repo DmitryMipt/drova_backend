@@ -78,8 +78,8 @@ def yk_webhook():
             # твои функции
             logging.info(f"Вебхук: email={email}")
             send_email(email, ACCESS_URL)
-            save_payment(email=email, amount=amount, status='paid',
-                         timestamp=datetime.datetime.utcnow())
+            mark_paid(payment_id)
+            
 
         except Exception as e:
             import traceback; traceback.print_exc()
@@ -87,7 +87,41 @@ def yk_webhook():
             return '', 200
 
     return '', 200
+    
+@app.route("/statiti")
+def stats():
+    conn = get_conn()
+    cur = conn.cursor()
 
+    # всего
+    cur.execute("SELECT COUNT(*) FROM payments")
+    total = cur.fetchone()[0]
+
+    # оплачено
+    cur.execute("SELECT COUNT(*) FROM payments WHERE status='paid'")
+    paid = cur.fetchone()[0]
+
+    # не оплатили
+    cur.execute("SELECT COUNT(*) FROM payments WHERE status='created'")
+    not_paid = cur.fetchone()[0]
+
+    # сумма
+    cur.execute("""
+        SELECT COALESCE(SUM(amount::numeric), 0)
+        FROM payments WHERE status='paid'
+    """)
+    total_sum_rub = cur.fetchone()[0]
+
+    cur.close()
+    conn.close()
+
+    return {
+        "opened_payment": total,
+        "paid": paid,
+        "not_paid": not_paid,
+        "conversion": round(paid / total * 100, 2) if total else 0,
+        "total_sum_rub": float(total_sum_rub)
+    }
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
