@@ -7,7 +7,7 @@ from yookassa import Payment
 import datetime
 import os
 import logging
-from db import init_db
+from db import init_db, _get_conn
 
 init_db()
 
@@ -92,7 +92,7 @@ def yk_webhook():
 def stats():    
     if request.args.get("key") != "123":
         return "no", 403
-    conn = get_conn()
+    conn = _get_conn()
     cur = conn.cursor()
 
     # всего
@@ -109,7 +109,12 @@ def stats():
 
     # сумма
     cur.execute("""
-        SELECT COALESCE(SUM(amount::numeric), 0)
+        SELECT COALESCE(SUM(
+            CASE 
+                WHEN amount ~ '^[0-9.]+$' THEN amount::numeric 
+                ELSE 0 
+            END
+        ), 0)
         FROM payments WHERE status='paid'
     """)
     total_sum_rub = cur.fetchone()[0]
